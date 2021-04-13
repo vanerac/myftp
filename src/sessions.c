@@ -37,8 +37,11 @@ void createSession(int fd, struct sockaddr_in *in)
     session.working_dir = NULL; // todo might have to init somewhere else
 
     for (int i = 0; i < SOMAXCONN; ++i)
-        if (!sessions[i])
-            sessions[i] = &session; // todo might have to malloc
+        if (!sessions[i]) {
+            sessions[i] = &session;
+            break;
+        }
+             // todo might have to malloc
     DEBUG("Added Session (unverified)\n")
 }
 
