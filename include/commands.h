@@ -11,31 +11,31 @@
 #include <stddef.h>
 #include "ftp.h"
 
-int noop(session_t config, char *argument);
+int noop(session_t *config, char *argument);
 
-int user(session_t config, char *argument);
+int user(session_t *config, char *argument);
 
-int pass(session_t config, char *argument);
+int pass(session_t *config, char *argument);
 
-int cwd(session_t config, char *argument);
+int cwd(session_t *config, char *argument);
 
-int quit(session_t config, char *argument);
+int quit(session_t *config, char *argument);
 
-int dele(session_t config, char *argument);
+int dele(session_t *config, char *argument);
 
-int pwd(session_t config, char *argument);
+int pwd(session_t *config, char *argument);
 
-int pasv(session_t config, char *argument);
+int pasv(session_t *config, char *argument);
 
-int port(session_t config, char *argument);
+int port(session_t *config, char *argument);
 
-int help(session_t config, char *argument);
+int help(session_t *config, char *argument);
 
-int retr(session_t config, char *argument);
+int retr(session_t *config, char *argument);
 
-int stor(session_t config, char *argument);
+int stor(session_t *config, char *argument);
 
-int list(session_t config, char *argument);
+int list(session_t *config, char *argument);
 
 enum commands_e {
     USER,
@@ -57,7 +57,7 @@ typedef struct command_s {
     enum commands_e command;
     char *command_name;
 
-    int (*command_functions)(session_t config, char *argument);
+    int (*command_functions)(session_t *config, char *argument);
 
     char *argument;
 } command_t;

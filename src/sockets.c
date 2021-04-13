@@ -17,7 +17,7 @@
 
 int transfer(int fd_from, int fd_to)
 {
-    // todo pipe fd ...
+    // todo pipe fd ?
     return 0;
 }
 
@@ -36,6 +36,7 @@ long int write_socket(int fd, char *buffer)
 int open_port(int port)
 {
     int ret_fd = socket(AF_INET, SOCK_STREAM, 0);
+    // todo check if success
     int s = 0;
     struct sockaddr_in serverAddr;
 
