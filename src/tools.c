@@ -9,6 +9,22 @@
 #include <string.h>
 #include <stdlib.h>
 
+command_t command_list[] = {
+    {USER, "USER", &user, NULL},
+    {PASS, "PASS", &pass, NULL},
+    {CWD, "CWD", &cwd, NULL},
+    {QUIT, "QUIT", &quit, NULL},
+    {DELE, "DELE", &dele, NULL},
+    {PWD, "PWD", &pwd, NULL},
+    {PASV, "PASV", &pasv, NULL},
+    {PORT, "PORT", &port, NULL},
+    {HELP, "HELP", &help, NULL},
+    {RETR, "RETR", &retr, NULL},
+    {STOR, "STOR", &stor, NULL},
+    {LIST, "LIST", &list, NULL},
+    {NOOP, "NOOP", &noop, NULL}
+};
+
 command_t parse_command(char *command_raw)
 {
     char *command_name = command_raw;

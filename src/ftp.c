@@ -9,13 +9,17 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 #include "sockets.h"
 #include "commands.h"
 #include "sessions.h"
 #include "tools.h"
 
+
+
 int handle_commands(int trigger_fd)
 {
+
     session_t *session = find_session(trigger_fd);
     char *raw_command = read_socket(session->ctrl_fd);
     command_t command = parse_command(raw_command);
@@ -37,7 +41,7 @@ int handle_session(int fd)
     int client_fd = accept(fd, (struct sockaddr *) &client,
         (socklen_t *) &length);
 
-    createSession(client_fd);
+    createSession(client_fd, &client);
 
     return client_fd;
 }
@@ -53,6 +57,7 @@ int ftp(unsigned short port, char *path)
     int fd = open_port(port);
     if (fd < 0)
         return 84;
+    initSessions();
 
     status = 0;
     while (status == 0) {

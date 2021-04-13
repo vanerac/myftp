@@ -62,20 +62,4 @@ typedef struct command_s {
     char *argument;
 } command_t;
 
-command_t command_list[] = {
-    {USER, "USER", &user, NULL},
-    {PASS, "PASS", &pass, NULL},
-    {CWD, "CWD", &cwd, NULL},
-    {QUIT, "QUIT", &quit, NULL},
-    {DELE, "DELE", &dele, NULL},
-    {PWD, "PWD", &pwd, NULL},
-    {PASV, "PASV", &pasv, NULL},
-    {PORT, "PORT", &port, NULL},
-    {HELP, "HELP", &help, NULL},
-    {RETR, "RETR", &retr, NULL},
-    {STOR, "STOR", &stor, NULL},
-    {LIST, "LIST", &list, NULL},
-    {NOOP, "NOOP", &noop, NULL}
-};
-
 #endif //C_COMMANDS_H
