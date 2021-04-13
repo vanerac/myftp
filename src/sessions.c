@@ -39,7 +39,7 @@ void createSession(int fd, struct sockaddr_in *in)
     for (int i = 0; i < SOMAXCONN; ++i)
         if (!sessions[i])
             sessions[i] = &session; // todo might have to malloc
-
+    DEBUG("Added Session (unverified)\n")
 }
 
 void deleteSession(int fd)

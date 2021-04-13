@@ -10,6 +10,9 @@
 
 #include <netdb.h>
 #include <stdbool.h>
+#include <unistd.h>
+
+#define DEBUG(str) write(1, str, strlen(str));
 
 typedef struct session_s {
     int ctrl_fd;

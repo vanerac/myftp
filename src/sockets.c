@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <ftp.h>
 
 #define BUFFER_SIZE 2024
 
@@ -30,27 +31,30 @@ char *read_socket(int fd)
 
 long int write_socket(int fd, char *buffer)
 {
-    return write(fd, buffer, strlen(buffer));
+    int write_len = 0;
+    write_len += write(fd, buffer, strlen(buffer));
+    write_len += write(fd, "\r\n", 2);
+    return write_len;
 }
 
 int open_port(int port)
 {
     int ret_fd = socket(AF_INET, SOCK_STREAM, 0);
     // todo check if success
-    int s = 0;
+    int s;
     struct sockaddr_in serverAddr;
 
     memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
-
     serverAddr.sin_addr.s_addr = INADDR_ANY;
-
     serverAddr.sin_port = htons(port);
+
     s = bind(ret_fd, (struct sockaddr *) &serverAddr,
         sizeof(serverAddr));
     if (s < 0) {
         perror("bind");
         return -1;
     }
+    DEBUG("Opened new socket\n")
     return ret_fd;
 }

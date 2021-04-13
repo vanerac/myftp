@@ -19,14 +19,17 @@
 
 int handle_commands(int trigger_fd)
 {
-
     session_t *session = find_session(trigger_fd);
     char *raw_command = read_socket(session->ctrl_fd);
+    DEBUG("Got command ")
+    DEBUG(raw_command);
+    DEBUG("\n");
     command_t command = parse_command(raw_command);
 
     int status = (*command.command_functions)(session, command.argument);
     free(command.argument);
     if (status) {
+        DEBUG("Command exit\n")
         deleteSession(session->ctrl_fd);
         close(session->ctrl_fd);
         return status;
@@ -40,9 +43,9 @@ int handle_session(int fd)
     unsigned long int length = sizeof(client);
     int client_fd = accept(fd, (struct sockaddr *) &client,
         (socklen_t *) &length);
-
+    DEBUG("Got new connection\n")
     createSession(client_fd, &client);
-
+    write_socket(client_fd, "220 (OK) Connection Established.");
     return client_fd;
 }
 
@@ -61,7 +64,7 @@ int ftp(unsigned short port, char *path)
 
     status = 0;
     while (status == 0) {
-        if (listen(fd, SOMAXCONN)) {
+        if (!listen(fd, 0)) {
             FD_SET(handle_session(fd), &rfds);
             ++nfds;
         }
