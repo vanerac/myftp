@@ -16,4 +16,8 @@ void createSession(int fd, struct sockaddr_in *in);
 
 void deleteSession(int fd);
 
+session_t ***getSessions();
+
+#define SESSIONS(void) *(getSessions())
+
 #endif //C_SESSIONS_H

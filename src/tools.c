@@ -37,7 +37,6 @@ command_t parse_command(char *command_raw)
         command_name = strndup(command_raw, i > 0 ? i - 1 : i);
         argument = strdup(&command_raw[i + 1]); // todo might overflow
     }
-
     for (int i = 0; i < NOOP; ++i) {
         if (strcmp(command_name, command_list[i].command_name) != 0)
             continue;
@@ -45,7 +44,8 @@ command_t parse_command(char *command_raw)
         ret.argument = argument;
         break;
     }
-    free(command_name);
+    if (command_name != command_raw)
+        free(command_name);
     free(command_raw);
     return ret;
 }

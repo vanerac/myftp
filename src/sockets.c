@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <ftp.h>
 
-#define BUFFER_SIZE 2024
+#define BUFFER_SIZE 256
 
 int transfer(int fd_from, int fd_to)
 {
@@ -25,6 +25,7 @@ int transfer(int fd_from, int fd_to)
 char *read_socket(int fd)
 {
     char *buffer = calloc(sizeof(char), BUFFER_SIZE);
+    // todo get next line
     read(fd, buffer, BUFFER_SIZE);
     return buffer;
 }

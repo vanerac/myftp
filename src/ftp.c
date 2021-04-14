@@ -11,21 +11,26 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include "sockets.h"
 #include "commands.h"
 #include "sessions.h"
 #include "tools.h"
 
-int open_sockets[SOMAXCONN];
+//int open_sockets[SOMAXCONN];
 
 int handle_commands(int trigger_fd)
 {
+    //    DEBUG("Got command ");
     session_t *session = find_session(trigger_fd);
+    if (!session) {
+        close(trigger_fd);
+        return 0;
+    }
     char *raw_command = read_socket(session->ctrl_fd);
-    DEBUG("Got command ")
-    DEBUG(raw_command);
-    DEBUG("\n");
     command_t command = parse_command(raw_command);
+    //    DEBUG(command.command_name);
+    //    DEBUG("\n");
 
     int status = (*command.command_functions)(session, command.argument);
     free(command.argument);
@@ -56,7 +61,7 @@ int ftp(unsigned short port, char *path)
 {
     fd_set rfds;
     struct timeval tv;
-    int status, nfds = 0;
+    int status, nfds = 1;
     FD_ZERO(&rfds);
     tv.tv_sec = 0;
     tv.tv_usec = 500;
@@ -64,26 +69,23 @@ int ftp(unsigned short port, char *path)
     if (fd < 0)
         return 84;
     initSessions();
-    memset(open_sockets, -1, sizeof(int) * SOMAXCONN);
-    int s = fcntl(fd, F_SETFL, O_NONBLOCK); // todo make non-blocking
-    s = fcntl(0, F_SETFL, O_NONBLOCK); // todo make non-blocking
+    fcntl(fd, F_SETFL, O_NONBLOCK);
 
     listen(fd, SOMAXCONN);
     status = 0;
     while (status == 0) {
         int new_con, i;
-        if (nfds)
-            select(nfds, &rfds, NULL, NULL, &tv);
-        for (i = 0; i < SOMAXCONN; ++i) {
-            int socket_tmp = open_sockets[i];
-            if (FD_ISSET(socket_tmp, &rfds))
+
+        select(FD_SETSIZE, &rfds, NULL, NULL, &tv);
+        for (i = 0; i < FD_SETSIZE; ++i) {
+            int socket_tmp = i;
+            if (FD_ISSET(socket_tmp, &rfds)) {
+                printf("%d: Got command\n", socket_tmp);
                 status = handle_commands(socket_tmp);
+            }
         }
         if ((new_con = handle_session(fd)) > 0) {
             FD_SET(new_con, &rfds);
-            for (i = 0; i < SOMAXCONN && open_sockets[i] != -1; ++i);
-            open_sockets[i] = new_con;
-            ++nfds;
         }
         //        DEBUG("LOOP\n");
     }
