@@ -10,8 +10,6 @@
 
 int main(int ac, char **ag)
 {
-    // argv[1] == port
-    // argv[2] == path
     if (ac < 3)
         return 84;
     int port = atoi(ag[1]);

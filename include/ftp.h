@@ -8,8 +8,8 @@
 #ifndef C_FTP_H
 #define C_FTP_H
 
-#include <netdb.h>
 #include <stdbool.h>
+#include <netinet/in.h>
 #include <unistd.h>
 
 #define DEBUG(str) write(1, str, strlen(str));

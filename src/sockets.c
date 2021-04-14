@@ -6,8 +6,6 @@
 */
 
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <stddef.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,7 +39,8 @@ long int write_socket(int fd, char *buffer)
 int open_port(int port)
 {
     int ret_fd = socket(AF_INET, SOCK_STREAM, 0);
-    // todo check if success
+    if (ret_fd < 0)
+        return -1;
     int s;
     struct sockaddr_in serverAddr;
 
@@ -50,8 +49,7 @@ int open_port(int port)
     serverAddr.sin_addr.s_addr = INADDR_ANY;
     serverAddr.sin_port = htons(port);
 
-    s = bind(ret_fd, (struct sockaddr *) &serverAddr,
-        sizeof(serverAddr));
+    s = bind(ret_fd, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
     if (s < 0) {
         perror("bind");
         return -1;

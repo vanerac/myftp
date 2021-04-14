@@ -6,31 +6,21 @@
 */
 
 #include <sys/socket.h>
-#include <netdb.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
-#include <stdio.h>
+
 #include "sockets.h"
 #include "commands.h"
 #include "sessions.h"
 #include "tools.h"
 
-//int open_sockets[SOMAXCONN];
-
 int handle_commands(int trigger_fd)
 {
-    //    DEBUG("Got command ");
     session_t *session = find_session(trigger_fd);
-    if (!session) {
-        close(trigger_fd);
-        return 0;
-    }
     char *raw_command = read_socket(session->ctrl_fd);
     command_t command = parse_command(raw_command);
-    //    DEBUG(command.command_name);
-    //    DEBUG("\n");
 
     int status = (*command.command_functions)(session, command.argument);
     free(command.argument);
@@ -61,34 +51,23 @@ int ftp(unsigned short port, char *path)
 {
     fd_set rfds;
     struct timeval tv;
-    int status, nfds = 1;
+    int status = 0, new_con, fd;
     FD_ZERO(&rfds);
     tv.tv_sec = 0;
     tv.tv_usec = 500;
-    int fd = open_port(port);
-    if (fd < 0)
+    if ((fd = open_port(port)) < 0)
         return 84;
     initSessions();
     fcntl(fd, F_SETFL, O_NONBLOCK);
-
     listen(fd, SOMAXCONN);
-    status = 0;
+
     while (status == 0) {
-        int new_con, i;
-
         select(FD_SETSIZE, &rfds, NULL, NULL, &tv);
-        for (i = 0; i < FD_SETSIZE; ++i) {
-            int socket_tmp = i;
-            if (FD_ISSET(socket_tmp, &rfds)) {
-                printf("%d: Got command\n", socket_tmp);
-                status = handle_commands(socket_tmp);
-            }
-        }
-        if ((new_con = handle_session(fd)) > 0) {
+        for (int i = 0; i < FD_SETSIZE; ++i)
+            if (FD_ISSET(i, &rfds))
+                status = handle_commands(i);
+        if ((new_con = handle_session(fd)) > 0)
             FD_SET(new_con, &rfds);
-        }
-        //        DEBUG("LOOP\n");
     }
-
     return 0;
 }
