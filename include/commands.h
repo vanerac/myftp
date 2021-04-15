@@ -37,9 +37,12 @@ int stor(session_t *config, char *argument);
 
 int list(session_t *config, char *argument);
 
+int cdup(session_t *config, char *arguments);
+
 enum commands_e {
     USER,
     PASS,
+    CDUP,
     CWD,
     QUIT,
     DELE,

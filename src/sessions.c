@@ -47,7 +47,7 @@ void createSession(int fd, struct sockaddr_in *in)
             sessions[i] = session;
             break;
         }
-    DEBUG("Added Session (unverified)\n")
+    DEBUG("Added Session\n")
 }
 
 void deleteSession(int fd)

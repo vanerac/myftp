@@ -21,6 +21,7 @@ SRC		=		src/ftp.c\
                 src/commands/pass.c\
                 src/commands/port.c\
                 src/commands/quit.c\
+                src/commands/cdup.c\
                 src/commands/stor.c
 
 

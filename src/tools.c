@@ -12,6 +12,7 @@
 command_t command_list[] = {
     {USER, "USER", &user, NULL},
     {PASS, "PASS", &pass, NULL},
+    {CDUP, "CDUP", &cdup, NULL},
     {CWD, "CWD", &cwd, NULL},
     {QUIT, "QUIT", &quit, NULL},
     {DELE, "DELE", &dele, NULL},

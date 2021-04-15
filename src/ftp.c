@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
-
 #include "sockets.h"
 #include "commands.h"
 #include "sessions.h"
@@ -20,8 +19,9 @@ int handle_commands(int trigger_fd)
 {
     session_t *session = find_session(trigger_fd);
     char *raw_command = read_socket(session->ctrl_fd);
+    DEBUG(raw_command);
     command_t command = parse_command(raw_command);
-
+    write(trigger_fd, "Command recv\n", strlen("Command recv\n"));
     int status = (*command.command_functions)(session, command.argument);
     free(command.argument);
     if (status) {
@@ -42,6 +42,7 @@ int handle_session(int fd)
     if (client_fd < 0)
         return -1;
     DEBUG("Got new connection\n")
+    //    fcntl(client_fd, F_SETFL, O_NONBLOCK);
     createSession(client_fd, &client);
     write_socket(client_fd, "220 (OK) Connection Established.");
     return client_fd;
@@ -51,10 +52,11 @@ int ftp(unsigned short port, char *path)
 {
     fd_set rfds;
     struct timeval tv;
-    int status = 0, new_con, fd;
+    int status = 0, fd;
     FD_ZERO(&rfds);
     tv.tv_sec = 0;
-    tv.tv_usec = 500;
+    tv.tv_usec = 5000;
+
     if ((fd = open_port(port)) < 0)
         return 84;
     initSessions();
@@ -62,12 +64,16 @@ int ftp(unsigned short port, char *path)
     listen(fd, SOMAXCONN);
 
     while (status == 0) {
-        select(FD_SETSIZE, &rfds, NULL, NULL, &tv);
+        if (select(FD_SETSIZE, &rfds, NULL, NULL, &tv) == -1)
+            return 84;
         for (int i = 0; i < FD_SETSIZE; ++i)
             if (FD_ISSET(i, &rfds))
                 status = handle_commands(i);
-        if ((new_con = handle_session(fd)) > 0)
-            FD_SET(new_con, &rfds);
+        handle_session(fd);
+        for (int i = 0; i < FD_SETSIZE; ++i) {
+            if (sessions[i])
+                FD_SET((sessions[i])->ctrl_fd, &rfds);
+        }
     }
     return 0;
 }
