@@ -12,7 +12,7 @@ void initSessions();
 
 session_t *find_session(int fd);
 
-void createSession(int fd, struct sockaddr_in *in);
+void createSession(int fd, struct sockaddr_in *in, char *path);
 
 void deleteSession(int fd);
 

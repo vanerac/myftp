@@ -36,12 +36,15 @@ void deleteSession(int fd)
 {
     for (int i = 0; i < SOMAXCONN; ++i)
         if (sessions[i] && sessions[i]->ctrl_fd == fd) {
+            free(sessions[i]->password);
+            free(sessions[i]->username);
+            free(sessions[i]->working_dir);
             free(sessions[i]);
             sessions[i] = NULL;
         }
 }
 
-void createSession(int fd, struct sockaddr_in *in)
+void createSession(int fd, struct sockaddr_in *in, char *path)
 {
     session_t *session = malloc(sizeof(session_t));
     session->ctrl_fd = fd;
@@ -49,7 +52,7 @@ void createSession(int fd, struct sockaddr_in *in)
     session->username = NULL;
     session->client_addr = in;
     session->logged = false;
-    session->working_dir = NULL; // todo might have to init somewhere else
+    session->working_dir = strdup(path);
 
     deleteSession(fd);
     for (int i = 0; i < SOMAXCONN; ++i)

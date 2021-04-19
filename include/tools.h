@@ -8,6 +8,8 @@
 #ifndef C_TOOLS_H
 #define C_TOOLS_H
 
+#include "commands.h"
+
 command_t parse_command(char *command_raw);
 
 int check_auth(session_t *config);

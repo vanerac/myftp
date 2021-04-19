@@ -33,7 +33,7 @@ int handle_commands(int trigger_fd)
     return 0;
 }
 
-int handle_session(int fd)
+int handle_session(int fd, char *path)
 {
     struct sockaddr_in client;
     unsigned long int length = sizeof(client);
@@ -42,37 +42,43 @@ int handle_session(int fd)
     if (client_fd < 0)
         return -1;
     DEBUG("Got new connection\n")
-    //    fcntl(client_fd, F_SETFL, O_NONBLOCK);
     createSession(client_fd, &client);
     write_socket(client_fd, "220 (OK) Connection Established.");
     return client_fd;
 }
 
+int listen_updates(int server_socket, fd_set *rfds, char *path)
+{
+    FD_SET(server_socket, rfds);
+
+    if (select(FD_SETSIZE, rfds, NULL, NULL, NULL) == -1)
+        return 84;
+    for (int i = 0; i < FD_SETSIZE; ++i)
+        if (FD_ISSET(i, rfds) && i != server_socket)
+            handle_commands(i);
+        else if (FD_ISSET(i, rfds) && i == server_socket)
+            handle_session(server_socket, path); // todo anon path by default
+    for (int i = 0; i < FD_SETSIZE; ++i)
+        if (sessions[i])
+            FD_SET((sessions[i])->ctrl_fd, rfds);
+    return 0;
+}
+
 int ftp(unsigned short port, char *path)
 {
-    fd_set rfds;
-    struct timeval tv;
-    int status = 0, fd;
-    FD_ZERO(&rfds);
-    tv.tv_sec = 0;
-    tv.tv_usec = 5000;
+
+    int fd;
 
     if ((fd = open_port(port)) < 0)
         return 84;
     initSessions();
-    fcntl(fd, F_SETFL, O_NONBLOCK);
     listen(fd, SOMAXCONN);
+    fd_set rfds;
+    FD_ZERO(&rfds);
+    int status = 0;
 
-    while (status == 0) {
-        if (select(FD_SETSIZE, &rfds, NULL, NULL, &tv) == -1)
-            return 84;
-        for (int i = 0; i < FD_SETSIZE; ++i)
-            if (FD_ISSET(i, &rfds))
-                status = handle_commands(i);
-        handle_session(fd); // todo anon path by default
-        for (int i = 0; i < FD_SETSIZE; ++i)
-            if (sessions[i])
-                FD_SET((sessions[i])->ctrl_fd, &rfds);
-    }
+    while (status == 0)
+        status = listen_updates(fd, &rfds, path);
+
     return 0;
 }
