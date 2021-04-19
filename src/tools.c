@@ -8,6 +8,7 @@
 #include <commands.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sockets.h>
 
 command_t command_list[] = {
     {USER, "USER", &user, NULL},
@@ -26,6 +27,19 @@ command_t command_list[] = {
     {NOOP, "NOOP", &noop, NULL}
 };
 
+int check_auth(session_t *config)
+{
+    if (!config->username || !config->password)
+        return 0;
+    if (!strcmp(config->password, "") &&
+        !strcmp(config->username, "anonymous")) {
+        write_socket(config->ctrl_fd, "230 User logged in, proceed.");
+        config->logged = 1;
+        return 1;
+    }
+    return 0;
+}
+
 command_t parse_command(char *command_raw)
 {
     char *command_name = command_raw;
@@ -38,6 +52,7 @@ command_t parse_command(char *command_raw)
         command_name = strndup(command_raw, i > 0 ? i - 1 : i);
         argument = strdup(&command_raw[i + 1]); // todo might overflow
     }
+    write(1, command_raw, strlen(command_raw));
     for (int i = 0; i < NOOP; ++i) {
         if (strcmp(command_name, command_list[i].command_name) != 0)
             continue;

@@ -10,4 +10,6 @@
 
 command_t parse_command(char *command_raw);
 
+int check_auth(session_t *config);
+
 #endif //C_TOOLS_H

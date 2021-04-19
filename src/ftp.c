@@ -69,11 +69,10 @@ int ftp(unsigned short port, char *path)
         for (int i = 0; i < FD_SETSIZE; ++i)
             if (FD_ISSET(i, &rfds))
                 status = handle_commands(i);
-        handle_session(fd);
-        for (int i = 0; i < FD_SETSIZE; ++i) {
+        handle_session(fd); // todo anon path by default
+        for (int i = 0; i < FD_SETSIZE; ++i)
             if (sessions[i])
                 FD_SET((sessions[i])->ctrl_fd, &rfds);
-        }
     }
     return 0;
 }

@@ -18,6 +18,7 @@ typedef struct session_s {
     int ctrl_fd;
     int data_fd;
     char *username;
+    char *password;
     char *working_dir;
     bool logged;
     struct sockaddr_in *client_addr;

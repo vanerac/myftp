@@ -14,8 +14,8 @@ session_t *sessions[SOMAXCONN];
 
 session_t ***getSessions()
 {
-    static session_t *sessions[FD_SETSIZE];
-    return (session_t ***) &sessions; // todo implement this
+    static session_t *s_sessions[FD_SETSIZE];
+    return (session_t ***) &s_sessions; // todo implement this
 }
 
 void initSessions()
@@ -32,6 +32,15 @@ session_t *find_session(int fd)
     return NULL;
 }
 
+void deleteSession(int fd)
+{
+    for (int i = 0; i < SOMAXCONN; ++i)
+        if (sessions[i] && sessions[i]->ctrl_fd == fd) {
+            free(sessions[i]);
+            sessions[i] = NULL;
+        }
+}
+
 void createSession(int fd, struct sockaddr_in *in)
 {
     session_t *session = malloc(sizeof(session_t));
@@ -42,19 +51,11 @@ void createSession(int fd, struct sockaddr_in *in)
     session->logged = false;
     session->working_dir = NULL; // todo might have to init somewhere else
 
+    deleteSession(fd);
     for (int i = 0; i < SOMAXCONN; ++i)
         if (!sessions[i]) {
             sessions[i] = session;
             break;
         }
     DEBUG("Added Session\n")
-}
-
-void deleteSession(int fd)
-{
-    for (int i = 0; i < SOMAXCONN; ++i)
-        if (sessions[i] && sessions[i]->ctrl_fd == fd) {
-            free(sessions[i]);
-            sessions[i] = NULL;
-        }
 }
