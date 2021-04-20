@@ -9,6 +9,7 @@
 #include <string.h>
 #include <tools.h>
 #include <sockets.h>
+#include "sessions.h"
 
 int pass(session_t *config, char *argument)
 {

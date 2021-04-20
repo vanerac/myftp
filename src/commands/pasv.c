@@ -7,6 +7,7 @@
 
 #include "commands.h"
 #include "sockets.h"
+#include "sessions.h"
 
 int pasv(session_t *config, char *argument)
 {

@@ -8,6 +8,7 @@
 #include <tools.h>
 #include <sockets.h>
 #include "commands.h"
+#include "sessions.h"
 
 int user(session_t *config, char *argument)
 {

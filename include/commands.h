@@ -10,6 +10,7 @@
 
 #include <stddef.h>
 #include "ftp.h"
+#include "sessions.h"
 
 int noop(session_t *config, char *argument);
 

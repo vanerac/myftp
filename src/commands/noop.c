@@ -7,6 +7,7 @@
 
 #include <commands.h>
 #include "sockets.h"
+#include "sessions.h"
 
 int noop(session_t *config, char *argument)
 {

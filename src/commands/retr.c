@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <sockets.h>
+#include "sessions.h"
 
 int send_file(session_t *config, char *path)
 {

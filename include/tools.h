@@ -9,6 +9,7 @@
 #define C_TOOLS_H
 
 #include "commands.h"
+#include "sessions.h"
 
 command_t parse_command(char *command_raw);
 

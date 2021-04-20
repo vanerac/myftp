@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sockets.h>
+#include "sessions.h"
 
 const command_t command_list[] = {
     {USER, "USER", &user, NULL},

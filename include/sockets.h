@@ -8,7 +8,7 @@
 #ifndef C_SOCKETS_H
 #define C_SOCKETS_H
 
-#include "ftp.h"
+#include "sessions.h"
 
 char *read_socket(int fd);
 

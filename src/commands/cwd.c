@@ -5,12 +5,12 @@
 ** cwd.c file
 */
 
-#include <commands.h>
 #include <string.h>
 #include <malloc.h>
-#include <sys/stat.h>
 #include <dirent.h>
-#include <sockets.h>
+#include "sockets.h"
+#include "commands.h"
+#include "sessions.h"
 
 int cwd(session_t *config, char *argument)
 {
@@ -24,12 +24,11 @@ int cwd(session_t *config, char *argument)
     DIR *dir = opendir(buffer);
     if (dir) {
         write_socket(config->ctrl_fd,
-            "Requested file action okay, completed.");
+            "250 Requested file action okay, completed.");
         free(config->working_dir);
         config->working_dir = buffer;
-    } else {
-        // todo invaild dir
-    }
-
+    } else
+        write_socket(config->ctrl_fd, "550 Requested action not taken.");
+    closedir(dir);
     return 0;
 }

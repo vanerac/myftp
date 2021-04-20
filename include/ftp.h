@@ -14,16 +14,6 @@
 
 #define DEBUG(str) write(1, str, strlen(str));
 
-typedef struct session_s {
-    int ctrl_fd;
-    int data_fd;
-    char *username;
-    char *password;
-    char *working_dir;
-    bool logged;
-    struct sockaddr_in *client_addr;
-} session_t;
-
 //session_t *sessions[SOMAXCONN];
 
 int ftp(unsigned short port, char *path);

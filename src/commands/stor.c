@@ -6,6 +6,7 @@
 */
 
 #include <commands.h>
+#include "sessions.h"
 
 int stor(session_t *config, char *argument)
 {
