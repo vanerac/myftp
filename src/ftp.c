@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include "sockets.h"
 #include "commands.h"
 #include "sessions.h"
@@ -19,9 +20,9 @@ int handle_commands(int trigger_fd)
 {
     session_t *session = find_session(trigger_fd);
     char *raw_command = read_socket(session->ctrl_fd);
-    DEBUG(raw_command);
     command_t command = parse_command(raw_command);
-    write(trigger_fd, "Command recv\n", strlen("Command recv\n"));
+    printf("command name: %s & argument : %s\n", command.command_name,
+        command.argument);
     int status = (*command.command_functions)(session, command.argument);
     free(command.argument);
     if (status) {
@@ -49,8 +50,11 @@ int handle_session(int fd, char *path)
 
 int listen_updates(int server_socket, fd_set *rfds, char *path)
 {
+    FD_ZERO(rfds);
+    for (int i = 0; i < FD_SETSIZE; ++i)
+        if (sessions[i])
+            FD_SET((sessions[i])->ctrl_fd, rfds);
     FD_SET(server_socket, rfds);
-
     if (select(FD_SETSIZE, rfds, NULL, NULL, NULL) == -1)
         return 84;
     for (int i = 0; i < FD_SETSIZE; ++i)
@@ -58,9 +62,7 @@ int listen_updates(int server_socket, fd_set *rfds, char *path)
             handle_commands(i);
         else if (FD_ISSET(i, rfds) && i == server_socket)
             handle_session(server_socket, path); // todo anon path by default
-    for (int i = 0; i < FD_SETSIZE; ++i)
-        if (sessions[i])
-            FD_SET((sessions[i])->ctrl_fd, rfds);
+
     return 0;
 }
 
@@ -72,7 +74,10 @@ int ftp(unsigned short port, char *path)
     if ((fd = open_port(port)) < 0)
         return 84;
     initSessions();
-    listen(fd, SOMAXCONN);
+    if (listen(fd, SOMAXCONN) != 0) {
+        perror("listen");
+        return 84;
+    }
     fd_set rfds;
     FD_ZERO(&rfds);
     int status = 0;

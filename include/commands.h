@@ -40,6 +40,8 @@ int list(session_t *config, char *argument);
 
 int cdup(session_t *config, char *arguments);
 
+int syst(session_t *config, char *argument);
+
 enum commands_e {
     USER,
     PASS,
@@ -54,6 +56,7 @@ enum commands_e {
     RETR,
     STOR,
     LIST,
+    SYST,
     NOOP
 };
 

@@ -13,11 +13,11 @@
 
 int pass(session_t *config, char *argument)
 {
-    config->password = argument;
+    config->password = strdup(argument);
     if (!check_auth(config) && !config->username)
         write_socket(config->ctrl_fd, "332 Need account for login.");
     else if (!check_auth(config)) {
-      // todo invalid password
+        write_socket(config->ctrl_fd, "530 Not logged in.");
     } else
         write_socket(config->ctrl_fd, "230 User logged in, proceed.");
     return 0;

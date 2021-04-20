@@ -16,13 +16,13 @@
 
 int transfer(int fd_from, int fd_to, int read)
 {
-//    int pipefd[2];
-//    if (pipe(pipefd) == -1) {
-//        perror("pipe");
-//        return 1;
-//    }
-//    close(pipefd[read ? 0 : 1]); // dont care abt read
-//    dup2(pipefd[read ? 0 : 1])
+    //    int pipefd[2];
+    //    if (pipe(pipefd) == -1) {
+    //        perror("pipe");
+    //        return 1;
+    //    }
+    //    close(pipefd[read ? 0 : 1]); // dont care abt read
+    //    dup2(pipefd[read ? 0 : 1])
     return 0;
 }
 
@@ -52,11 +52,11 @@ int open_port(int port)
 
     memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_addr.s_addr = INADDR_ANY;
+    serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
     serverAddr.sin_port = htons(port);
 
     s = bind(ret_fd, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
-    if (s < 0) {
+    if (s != 0) {
         perror("bind");
         return -1;
     }

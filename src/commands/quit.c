@@ -14,5 +14,5 @@ int quit(session_t *config, char *argument)
     write_socket(config->ctrl_fd, "221 Service closing control connection.");
     close(config->ctrl_fd);
     deleteSession(config->ctrl_fd);
-    return 0;
+    return 1;
 }

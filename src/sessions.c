@@ -54,7 +54,7 @@ void createSession(int fd, struct sockaddr_in *in, char *path)
     session->client_addr = in;
     session->logged = false;
     session->working_dir = strdup(path);
-    session->home_dir = strdup(path);
+    strdup(path);
 
     deleteSession(fd);
     for (int i = 0; i < SOMAXCONN; ++i)

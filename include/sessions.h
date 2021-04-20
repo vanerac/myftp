@@ -18,7 +18,6 @@ typedef struct session_s {
     char *username;
     char *password;
     char *working_dir;
-    char *home_dir;
     bool logged;
     struct sockaddr_in *client_addr;
 } session_t;

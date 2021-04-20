@@ -5,6 +5,7 @@
 ** pasv.c file
 */
 
+#include <stdio.h>
 #include "commands.h"
 #include "sockets.h"
 #include "sessions.h"
@@ -19,9 +20,13 @@ int pasv(session_t *config, char *argument)
         return 1; // todo return error
     config->data_fd = data_port;
 
+    // todo listen data_port ???
     // todo send ip & new port info
-    write_socket(config->ctrl_fd,
-        "227 Entering Passive Mode (h1,h2,h3,h4,p1,p2).");
+    int ip[4] = {127, 0, 0, 1};
+
+    dprintf(config->ctrl_fd,
+        "227 Entering Passive Mode (%d,%d,%d,%d,%d,%d).\r\n", ip[0], ip[1],
+        ip[2], ip[3], config->ctrl_fd, config->data_fd);
 
     return 0;
 }
