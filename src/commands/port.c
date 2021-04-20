@@ -9,5 +9,6 @@
 
 int port(session_t *config, char *argument)
 {
+    // 200 Command okay.
     return 0;
 }

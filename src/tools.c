@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <sockets.h>
 
-command_t command_list[] = {
+const command_t command_list[] = {
     {USER, "USER", &user, NULL},
     {PASS, "PASS", &pass, NULL},
     {CDUP, "CDUP", &cdup, NULL},
@@ -29,6 +29,7 @@ command_t command_list[] = {
 
 int check_auth(session_t *config)
 {
+    // todo password can be null for anon
     if (!config->username || !config->password)
         return 0;
     if (!strcmp(config->password, "") &&
@@ -46,7 +47,7 @@ command_t parse_command(char *command_raw)
     char *argument = NULL;
     command_t ret = command_list[NOOP];
 
-    for (int i = 0; command_raw[i]; ++i) {
+    for (int i = 0; command_raw[i] && !argument; ++i) {
         if (command_raw[i] != ' ')
             continue;
         command_name = strndup(command_raw, i > 0 ? i - 1 : i);

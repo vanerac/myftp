@@ -42,7 +42,7 @@ int handle_session(int fd, char *path)
     if (client_fd < 0)
         return -1;
     DEBUG("Got new connection\n")
-    createSession(client_fd, &client);
+    createSession(client_fd, &client, path);
     write_socket(client_fd, "220 (OK) Connection Established.");
     return client_fd;
 }

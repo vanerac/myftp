@@ -9,5 +9,6 @@
 
 int pwd(session_t *config, char *argument)
 {
+    // 257 "PATHNAME" created.
     return 0;
 }

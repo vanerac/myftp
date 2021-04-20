@@ -9,5 +9,7 @@
 
 int cdup(session_t *config, char *argument)
 {
+    // todo remove working_dir/*
+    // 200 Command okay.
     return 0;
 }

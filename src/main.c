@@ -14,5 +14,6 @@ int main(int ac, char **ag)
         return 84;
     int port = atoi(ag[1]);
     char *path = ag[2];
+    // todo stat path to verify its valid
     return ftp(port, path);
 }
