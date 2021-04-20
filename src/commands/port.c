@@ -9,27 +9,28 @@
 #include <netdb.h>
 #include <stdlib.h>
 #include <libnet.h>
+#include "sockets.h"
 #include "sessions.h"
 #include "commands.h"
 
 int port(session_t *config, char *argument)
 {
-    // 200 Command okay.
+    // todo full error management here
 
     int fd = socket(AF_INET, SOCK_STREAM, 0);
     int i = 0;
 
     for (int count = 0; argument[i] != '\0'; ++i) {
-        if (argument[i] == ',' && count < 4)
+        if (argument[i] == ',' && count < 3)
             argument[i] = '.', count++;
         else if (argument[i] == ',')
             break;
     }
 
     char *ptr = index(&argument[i], ',');
-    int p1 = atoi(ptr);
+    int p1 = atoi(++ptr);
     ptr = index(ptr, ',');
-    int p2 = atoi(ptr);
+    int p2 = atoi(++ptr);
 
     int data_port = p1 * 256 + p2;
 
@@ -44,6 +45,6 @@ int port(session_t *config, char *argument)
     }
 
     config->data_fd = fd;
-
+    write_socket(config->ctrl_fd, "200 Command okay.");
     return 0;
 }

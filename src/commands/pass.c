@@ -13,7 +13,7 @@
 
 int pass(session_t *config, char *argument)
 {
-    config->password = strdup(argument);
+    config->password = argument ? strdup(argument) : argument;
     if (!check_auth(config) && !config->username)
         write_socket(config->ctrl_fd, "332 Need account for login.");
     else if (!check_auth(config)) {

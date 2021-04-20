@@ -36,12 +36,9 @@ char *trim_str(char *str)
 
 int check_auth(session_t *config)
 {
-    // todo password can be null for anon
     printf("username: (%s)\n", config->username);
-    if (!strcmp(config->username, "anonymous")) {
-        config->logged = 1;
-        return 1;
-    }
+    if (!strcmp(config->username, "anonymous"))
+        return (config->logged = 1);
     if (!config->username || !config->password)
         return 0;
     return 0;

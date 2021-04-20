@@ -5,11 +5,13 @@
 ** pwd.c file
 */
 
-#include <commands.h>
+#include <stdio.h>
+#include "commands.h"
 #include "sessions.h"
 
 int pwd(session_t *config, char *argument)
 {
-    // 257 "PATHNAME" created.
+    (void) argument;
+    dprintf(config->ctrl_fd, "257 \"%s\"\r\n", config->working_dir);
     return 0;
 }

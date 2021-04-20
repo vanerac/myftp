@@ -16,10 +16,15 @@ int cwd(session_t *config, char *argument)
 {
     char *direction = argument;
 
-    char *buffer = malloc(strlen(config->working_dir) + strlen(direction) + 1);
+    char *buffer = calloc(strlen(config->working_dir) + strlen(direction) + 2,
+        1);
     strcat(buffer, config->working_dir);
-    strcat(&buffer[strlen(config->working_dir) - 1], "/");
-    strcat(&buffer[strlen(config->working_dir)], direction);
+    if (buffer[strlen(buffer) - 1] != '/')
+        strcat(&buffer[strlen(buffer) - 1], "/");
+    strcat(&buffer[strlen(buffer)], direction);
+
+    if (buffer[strlen(buffer)] != '/')
+        buffer[strlen(buffer)] = '/';
 
     DIR *dir = opendir(buffer);
     if (dir) {

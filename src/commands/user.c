@@ -13,6 +13,9 @@
 
 int user(session_t *config, char *argument)
 {
+    if (!argument)
+        write_socket(config->ctrl_fd,
+            "Syntax error in parameters or arguments.");
     config->username = strdup(argument);
     if (!config->password)
         write_socket(config->ctrl_fd, "331 User name okay, need password.");
