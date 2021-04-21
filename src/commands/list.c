@@ -39,7 +39,7 @@ int list(session_t *config, char *argument)
     write_socket(config->ctrl_fd,
         "150 File status okay; about to open data connection.");
 
-    char *args[3] = {"ls", buffer, NULL};
+    char *args[4] = {"ls", "-al", buffer, NULL};
 
     int pid = fork();
     switch (pid) {
