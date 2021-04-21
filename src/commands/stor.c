@@ -37,13 +37,15 @@ int stor(session_t *config, char *argument)
     strcat(&buffer[strlen(buffer)], direction);
 
     char *path = buffer;
-    int fd = open(path, O_CREAT | O_WRONLY);
+    int fd = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0666);
     if (fd < 0) {
         write_socket(config->ctrl_fd,
             "550 Requested action not taken. File unavailable (e.g., file not found, no access).");
         return 0;
     }
 
+    write_socket(config->ctrl_fd,
+        "150 File status okay; about to open data connection.");
     int pid = fork();
     switch (pid) {
     case -1:
@@ -52,10 +54,12 @@ int stor(session_t *config, char *argument)
 
         exit(1);
     default:
-        waitpid(pid, NULL, 0);
+//        waitpid(pid, NULL, 0);
         buffer = malloc(100);
-        for (int rd; (rd = (int) read(config->data_fd, buffer, 100));)
+        for (int rd; (rd = (int) read(config->data_fd, buffer, 100) == 100);) {
+            write(1, buffer, rd);
             write(fd, buffer, rd);
+        }
         close(config->data_fd);
         close(fd);
         config->data_fd = -1;

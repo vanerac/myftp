@@ -35,4 +35,6 @@ session_t ***getSessions();
 #define SESSIONS(void) *(getSessions())
 
 
+extern session_t *sessions[FD_SETSIZE];
+
 #endif //C_SESSIONS_H

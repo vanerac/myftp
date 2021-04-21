@@ -57,6 +57,7 @@ re: gclean all
 
 tests_run:	$(OTRC) $(OBJ)
 	gcc -o unit_test $(TRC) $(SRC) $(CFLAGS) -lcriterion --coverage
+	#./$(NAME) 5800 `pwd` &
 	./unit_test
 
 .PHONY:			gclean clean fclean re tests_run all

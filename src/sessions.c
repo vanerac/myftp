@@ -11,7 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-session_t *sessions[SOMAXCONN];
+session_t *sessions[FD_SETSIZE];
 
 session_t ***getSessions()
 {
@@ -21,12 +21,12 @@ session_t ***getSessions()
 
 void initSessions()
 {
-    memset(sessions, 0, sizeof(session_t *) * SOMAXCONN);
+    memset(sessions, 0, sizeof(session_t *) * FD_SETSIZE);
 }
 
 session_t *find_session(int fd)
 {
-    for (int i = 0; i < SOMAXCONN; ++i) {
+    for (int i = 0; i < FD_SETSIZE; ++i) {
         if (sessions[i] && sessions[i]->ctrl_fd == fd)
             return sessions[i];
     }
@@ -35,7 +35,7 @@ session_t *find_session(int fd)
 
 void deleteSession(int fd)
 {
-    for (int i = 0; i < SOMAXCONN; ++i)
+    for (int i = 0; i < FD_SETSIZE; ++i)
         if (sessions[i] && sessions[i]->ctrl_fd == fd) {
             free(sessions[i]->password);
             free(sessions[i]->username);
@@ -54,10 +54,9 @@ void createSession(int fd, struct sockaddr_in *in, char *path)
     session->client_addr = in;
     session->logged = false;
     session->working_dir = strdup(path);
-    strdup(path);
 
     deleteSession(fd);
-    for (int i = 0; i < SOMAXCONN; ++i)
+    for (int i = 0; i < FD_SETSIZE; ++i)
         if (!sessions[i]) {
             sessions[i] = session;
             break;

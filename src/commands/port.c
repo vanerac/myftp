@@ -6,10 +6,10 @@
 */
 
 #include <sys/socket.h>
-#include <netdb.h>
 #include <stdlib.h>
 #include <strings.h>
 #include <arpa/inet.h>
+#include <string.h>
 #include "sockets.h"
 #include "sessions.h"
 #include "commands.h"

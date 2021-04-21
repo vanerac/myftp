@@ -16,8 +16,6 @@ long int write_socket(int fd, char *buffer);
 
 int open_port(int port);
 
-extern session_t *sessions[SOMAXCONN];
-
 int transfer(int fd_from, int fd_to);
 
 #endif //C_SOCKETS_H

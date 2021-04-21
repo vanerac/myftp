@@ -14,6 +14,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/sendfile.h>
+#include <stdio.h>
 #include "sessions.h"
 
 int retr(session_t *config, char *argument)
@@ -38,6 +39,7 @@ int retr(session_t *config, char *argument)
     char *path = buffer;
     int fd = open(path, O_RDONLY);
     if (fd < 0) {
+        perror("open");
         write_socket(config->ctrl_fd,
             "550 Requested action not taken. File unavailable (e.g., file not found, no access).");
         return 0;
@@ -45,16 +47,18 @@ int retr(session_t *config, char *argument)
 
     struct stat s;
     stat(path, &s);
-
+    write_socket(config->ctrl_fd,
+        "150 File status okay; about to open data connection.");
     int pid = fork();
     switch (pid) {
     case -1:
         return 1;
     case 0:
-        sendfile(config->data_fd, fd, 0, s.st_size);
+
         exit(1);
     default:
-        waitpid(pid, NULL, 0);
+        printf("sent: %lu bytes\n",
+            sendfile(config->data_fd, fd, 0, s.st_size));
 
         close(config->data_fd);
         close(fd);
