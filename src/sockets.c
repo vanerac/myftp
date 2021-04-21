@@ -14,15 +14,9 @@
 
 #define BUFFER_SIZE 256
 
-int transfer(int fd_from, int fd_to, int read)
+int transfer(int fd_from, int fd_to)
 {
-    //    int pipefd[2];
-    //    if (pipe(pipefd) == -1) {
-    //        perror("pipe");
-    //        return 1;
-    //    }
-    //    close(pipefd[read ? 0 : 1]); // dont care abt read
-    //    dup2(pipefd[read ? 0 : 1])
+    dup2(fd_to, fd_from);
     return 0;
 }
 
