@@ -11,44 +11,56 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <sockets.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/sendfile.h>
 #include "sessions.h"
-
-int send_file(session_t *config, char *path)
-{
-    int fd = open("path", O_WRONLY);
-    if (fd == -1) {
-        // todo
-    }
-    return transfer(fd, config->data_fd, 0); // write
-}
 
 int retr(session_t *config, char *argument)
 {
-
-    // todo path = argument
-
-    // is there data socket ?
+    if (!config->logged)
+        return 0; // todo error message
     if (config->data_fd < 0)
         return 1; // todo print error
 
+    if (!argument)
+        return 1; // todo handle this
 
-    // todo stat file to check if its real
-    char *path;
+    char *direction = argument;
+    char *buffer = calloc(strlen(config->working_dir) + strlen(direction) + 2,
+        1);
+
+    strcat(buffer, config->working_dir);
+    if (buffer[strlen(buffer) - 1] != '/')
+        strcat(&buffer[strlen(buffer) - 1], "/");
+    strcat(&buffer[strlen(buffer)], direction);
+
+    char *path = buffer;
+    int fd = open(path, O_RDONLY);
+    if (fd < 0) {
+        write_socket(config->ctrl_fd,
+            "550 Requested action not taken. File unavailable (e.g., file not found, no access).");
+        return 0;
+    }
+
+    struct stat s;
+    stat(path, &s);
 
     int pid = fork();
     switch (pid) {
     case -1:
-        return 1; // todo fail system
+        return 1;
     case 0:
-        if (send_file(config, path)) {
-            // todo error
-        }
+        sendfile(config->data_fd, fd, 0, s.st_size);
         exit(1);
     default:
-        waitpid(pid, NULL, 0); // todo is this blocking ??
+        waitpid(pid, NULL, 0);
+
         close(config->data_fd);
+        close(fd);
         config->data_fd = -1;
         break;
     }
+    write_socket(config->ctrl_fd, "226 Closing data connection.");
     return 0;
 }
