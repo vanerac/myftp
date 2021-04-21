@@ -14,7 +14,8 @@
 
 int dele(session_t *config, char *argument)
 {
-    // todo check auth
+    if (!config->logged)
+        return 0; // todo error message
     char *direction = argument;
     char *buffer = calloc(strlen(config->working_dir) + strlen(direction) + 2,
         1);

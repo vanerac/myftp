@@ -16,9 +16,15 @@
 
 int list(session_t *config, char *argument)
 {
+    if (!config->logged)
+        return 0; // todo error message
     struct stat s;
     char *direction = argument;
     char *buffer;
+
+    // todo check for data socket
+    if (config->data_fd < 0)
+        return 0; // todo error message
 
     if (direction) {
         buffer = calloc(strlen(config->working_dir) + strlen(direction) + 2,

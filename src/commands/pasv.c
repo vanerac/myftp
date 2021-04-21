@@ -12,6 +12,8 @@
 
 int pasv(session_t *config, char *argument)
 {
+    if (!config->logged)
+        return 0; // todo error message
     if (config->data_fd != -1) {
         // todo existing connection
     }

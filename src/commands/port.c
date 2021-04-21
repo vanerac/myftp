@@ -15,6 +15,8 @@
 
 int port(session_t *config, char *argument)
 {
+    if (!config->logged)
+        return 0; // todo error message
     // todo full error management here
 
     int fd = socket(AF_INET, SOCK_STREAM, 0);

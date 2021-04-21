@@ -21,6 +21,13 @@ const command_t command_list[] = {{USER, "USER", &user, NULL},
     {STOR, "STOR", &stor, NULL}, {LIST, "LIST", &list, NULL},
     {SYST, "SYST", &syst, NULL}, {NOOP, "NOOP", &noop, NULL}};
 
+
+int is_valid_file(char *base, char *path)
+{
+
+}
+
+
 char *trim_str(char *str)
 {
     if (!str)
@@ -36,8 +43,7 @@ char *trim_str(char *str)
 
 int check_auth(session_t *config)
 {
-    printf("username: (%s)\n", config->username);
-    if (!strcmp(config->username, "anonymous"))
+    if (!strcmp(config->username, "Anonymous"))
         return (config->logged = 1);
     if (!config->username || !config->password)
         return 0;

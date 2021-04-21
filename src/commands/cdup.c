@@ -12,6 +12,8 @@
 
 int cdup(session_t *config, char *argument)
 {
+    if (!config->logged)
+        return 0; // todo error message
     (void) argument;
     char *buffer = config->working_dir;
     if (!rindex(buffer, '/') || rindex(buffer, '/') == index(buffer, '/')) {
