@@ -25,9 +25,6 @@ int dele(session_t *config, char *argument)
         strcat(&buffer[strlen(buffer) - 1], "/");
     strcat(&buffer[strlen(buffer)], direction);
 
-    if (buffer[strlen(buffer)] != '/')
-        buffer[strlen(buffer)] = '/';
-
     if (remove(buffer))
         write_socket(config->ctrl_fd,
             "550 Requested action not taken. File unavailable (e.g., file not found, no access).");
