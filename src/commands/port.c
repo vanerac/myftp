@@ -8,7 +8,8 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <stdlib.h>
-#include <libnet.h>
+#include <strings.h>
+#include <arpa/inet.h>
 #include "sockets.h"
 #include "sessions.h"
 #include "commands.h"
