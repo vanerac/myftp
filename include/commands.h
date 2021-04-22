@@ -42,6 +42,8 @@ int cdup(session_t *config, char *arguments);
 
 int syst(session_t *config, char *argument);
 
+int invalid(session_t *config, char *argument);
+
 enum commands_e {
     USER,
     PASS,
@@ -57,7 +59,8 @@ enum commands_e {
     STOR,
     LIST,
     SYST,
-    NOOP
+    NOOP,
+    INVALID
 };
 
 typedef struct command_s {

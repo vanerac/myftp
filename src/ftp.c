@@ -20,7 +20,10 @@ int handle_commands(int trigger_fd)
 {
     session_t *session = find_session(trigger_fd);
     char *raw_command = read_socket(session->ctrl_fd);
+    // todo buffer management
+    // todo store buffer if incomplete
     command_t command = parse_command(raw_command);
+    // todo save after \r\n
     printf("command name: %s & argument : %s\n", command.command_name,
         command.argument);
     int status = (*command.command_functions)(session, command.argument);

@@ -57,7 +57,6 @@ int stor(session_t *config, char *argument)
 //        waitpid(pid, NULL, 0);
         buffer = malloc(100);
         for (int rd; (rd = (int) read(config->data_fd, buffer, 100) == 100);) {
-            write(1, buffer, rd);
             write(fd, buffer, rd);
         }
         close(config->data_fd);

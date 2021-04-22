@@ -19,14 +19,8 @@ const command_t command_list[] = {{USER, "USER", &user, NULL},
     {PASV, "PASV", &pasv, NULL}, {PORT, "PORT", &port, NULL},
     {HELP, "HELP", &help, NULL}, {RETR, "RETR", &retr, NULL},
     {STOR, "STOR", &stor, NULL}, {LIST, "LIST", &list, NULL},
-    {SYST, "SYST", &syst, NULL}, {NOOP, "NOOP", &noop, NULL}};
-
-
-int is_valid_file(char *base, char *path)
-{
-
-}
-
+    {SYST, "SYST", &syst, NULL}, {NOOP, "NOOP", &noop, NULL},
+    {INVALID, "", &invalid, NULL}};
 
 char *trim_str(char *str)
 {
@@ -54,16 +48,14 @@ command_t parse_command(char *command_raw)
 {
     char *command_name = command_raw;
     char *argument = NULL;
-    command_t ret = command_list[NOOP];
-
+    command_t ret = command_list[INVALID];
     for (int i = 0; command_raw[i] && !argument; ++i) {
         if (command_raw[i] != ' ')
             continue;
         command_name = strndup(command_raw, i);
         argument = strdup(&command_raw[i + 1]); // todo might overflow
     }
-    for (int i = 0; i < NOOP; ++i) {
-        //        printf("%s ? %s\n", command_name, command_list[i].command_name);
+    for (int i = 0; i < INVALID; ++i) {
         if (strncmp(command_name, command_list[i].command_name,
             strlen(command_list[i].command_name)) != 0)
             continue;
@@ -71,8 +63,6 @@ command_t parse_command(char *command_raw)
         ret.argument = trim_str(argument);
         break;
     }
-    //    printf("got raw command: %s -> %s & %s\n", command_raw, command_name,
-    //        argument);
     if (command_name != command_raw)
         free(command_name);
     free(command_raw);

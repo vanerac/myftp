@@ -23,6 +23,7 @@ SRC		=		src/ftp.c\
                 src/commands/quit.c\
                 src/commands/cdup.c\
                 src/commands/syst.c\
+                src/commands/invalid.c\
                 src/commands/stor.c
 
 

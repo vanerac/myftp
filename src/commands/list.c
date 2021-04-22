@@ -45,7 +45,7 @@ int list(session_t *config, char *argument)
     write_socket(config->ctrl_fd,
         "150 File status okay; about to open data connection.");
 
-    char *args[4] = {"ls", "-al", buffer, NULL};
+    char *args[4] = {"/bin/ls", "-l", buffer, NULL};
 
     int pid = fork();
     switch (pid) {
@@ -55,7 +55,7 @@ int list(session_t *config, char *argument)
     case 0:
         dup2(config->data_fd, 1);
         dup2(config->data_fd, 2);
-        execvp("ls", args);
+        execvp("/bin/ls", args);
         write_socket(config->data_fd, "");
         exit(0);
     default:
