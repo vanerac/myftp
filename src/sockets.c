@@ -24,7 +24,7 @@ char *read_socket(int fd)
 {
     char *buffer = calloc(sizeof(char), BUFFER_SIZE);
     // todo get next line
-    read(fd, buffer, BUFFER_SIZE);
+    size_t rd = read(fd, buffer, BUFFER_SIZE);
     return buffer;
 }
 

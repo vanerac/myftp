@@ -14,8 +14,10 @@
 
 int cwd(session_t *config, char *argument)
 {
-    if (!config->logged)
-        return 0; // todo error message
+    if (!config->logged) {
+        write_socket(config->ctrl_fd, "530 Not logged in.");
+        return 0;
+    }
     char *direction = argument;
 
     if (!direction) {

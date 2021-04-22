@@ -19,13 +19,15 @@
 
 int retr(session_t *config, char *argument)
 {
-    if (!config->logged)
-        return 0; // todo error message
+    if (!config->logged) {
+        write_socket(config->ctrl_fd, "530 Not logged in.");
+        return 0;
+    }
     if (config->data_fd < 0)
-        return 1; // todo print error
+        return 0; // todo print error
 
     if (!argument)
-        return 1; // todo handle this
+        return 0; // todo handle this
 
     char *direction = argument;
     char *buffer = calloc(strlen(config->working_dir) + strlen(direction) + 2,

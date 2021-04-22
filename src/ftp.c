@@ -20,6 +20,7 @@ int handle_commands(int trigger_fd)
 {
     session_t *session = find_session(trigger_fd);
     char *raw_command = read_socket(session->ctrl_fd);
+    // todo recover rd size
     // todo buffer management
     // todo store buffer if incomplete
     command_t command = parse_command(raw_command);
@@ -64,7 +65,7 @@ int listen_updates(int server_socket, fd_set *rfds, char *path)
         if (FD_ISSET(i, rfds) && i != server_socket)
             handle_commands(i);
         else if (FD_ISSET(i, rfds) && i == server_socket)
-            handle_session(server_socket, path); // todo anon path by default
+            handle_session(server_socket, path);
 
     return 0;
 }
