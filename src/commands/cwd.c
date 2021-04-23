@@ -8,44 +8,44 @@
 #include <string.h>
 #include <malloc.h>
 #include <dirent.h>
+#include <tools.h>
 #include "sockets.h"
 #include "commands.h"
 #include "sessions.h"
 
-int cwd(session_t *config, char *argument)
+static int error_check(session_t *config, char *argument)
 {
     if (!config->logged) {
         write_socket(config->ctrl_fd, "530 Not logged in.");
-        return 0;
+        return 1;
     }
-    char *direction = argument;
+    if (argument) {
+        write_socket(config->ctrl_fd,
+            "501 Syntax error in parameters or arguments.");
+        return 1;
+    }
+    return 0;
+}
 
-    if (!direction) {
-        // todo error or cd to home ??
+int cwd(session_t *config, char *argument)
+{
+    char *buffer;
+    if (error_check(config, argument))
         return 0;
-    }
-    char *buffer = calloc(strlen(config->working_dir) + strlen(direction) + 2,
-        1);
-    if (direction[0] == '/') {
-        buffer = strcat(buffer, direction);
-    } else {
-        strcat(buffer, config->working_dir);
-        if (buffer[strlen(buffer) - 1] != '/')
-            strcat(&buffer[strlen(buffer) - 1], "/");
-        strcat(&buffer[strlen(buffer)], direction);
-    }
-
+    if (argument[0] == '/')
+        buffer = strdup(argument);
+    else
+        buffer = append_path(config->working_dir, argument);
     if (buffer[strlen(buffer) - 1] != '/')
         buffer[strlen(buffer) - 1] = '/';
-
     DIR *dir = opendir(buffer);
     if (dir) {
-        write_socket(config->ctrl_fd,
-            "250 Requested file action okay, completed.");
+        write_socket(config->ctrl_fd, "250 Requested file action okay.");
         free(config->working_dir);
         config->working_dir = buffer;
     } else
         write_socket(config->ctrl_fd, "550 Requested action not taken.");
     closedir(dir);
+    free(buffer);
     return 0;
 }

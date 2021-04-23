@@ -6,25 +6,25 @@
 ##
 
 SRC		=		src/ftp.c\
-                src/sessions.c\
-                src/sockets.c\
-                src/tools.c\
-                src/commands/cwd.c\
-                src/commands/help.c\
-                src/commands/noop.c\
-                src/commands/pasv.c\
-                src/commands/pwd.c\
-                src/commands/retr.c\
-                src/commands/user.c\
-                src/commands/dele.c\
-                src/commands/list.c\
-                src/commands/pass.c\
-                src/commands/port.c\
-                src/commands/quit.c\
-                src/commands/cdup.c\
-                src/commands/syst.c\
-                src/commands/invalid.c\
-                src/commands/stor.c
+				src/sessions.c\
+				src/sockets.c\
+				src/tools.c\
+				src/commands/cwd.c\
+				src/commands/help.c\
+				src/commands/noop.c\
+				src/commands/pasv.c\
+				src/commands/pwd.c\
+				src/commands/retr.c\
+				src/commands/user.c\
+				src/commands/dele.c\
+				src/commands/list.c\
+				src/commands/pass.c\
+				src/commands/port.c\
+				src/commands/quit.c\
+				src/commands/cdup.c\
+				src/commands/syst.c\
+				src/commands/invalid.c\
+				src/commands/stor.c
 
 
 OBJ		=		$(SRC:%.c=%.o)

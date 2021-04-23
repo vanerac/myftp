@@ -11,6 +11,7 @@
 
 int help(session_t *config, char *argument)
 {
+    (void)argument;
     write_socket(config->ctrl_fd, "214 Help message.");
     return 0;
 }

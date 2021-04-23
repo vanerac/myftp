@@ -40,8 +40,6 @@ int handle_session(int fd, char *path)
     unsigned long int length = sizeof(client);
     int client_fd = accept(fd, (struct sockaddr *) &client,
         (socklen_t *) &length);
-    if (client_fd < 0)
-        return -1;
     DEBUG("Got new connection\n")
     createSession(client_fd, &client, path);
     write_socket(client_fd, "220 (OK) Connection Established.");

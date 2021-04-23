@@ -40,14 +40,12 @@ int retr(session_t *config, char *argument)
     int fd = open(buffer, O_RDONLY);
     if (fd < 0) {
         perror("open");
-        write_socket(config->ctrl_fd,
-            "550 Requested action not taken.");
+        write_socket(config->ctrl_fd, "550 Requested action not taken.");
         return 0;
     }
     struct stat s;
     stat(buffer, &s);
-    write_socket(config->ctrl_fd,
-        "150 File status okay; about to open data connection.");
+    write_socket(config->ctrl_fd, "150 File status okay");
     free(buffer);
     transfer(fd, config->data_fd);
     config->data_fd = -1;

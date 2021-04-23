@@ -13,26 +13,28 @@
 #include "sockets.h"
 #include "sessions.h"
 
-int list(session_t *config, char *argument)
+static int error_check(session_t *config)
 {
-    char *buffer;
     if (!config->logged) {
         write_socket(config->ctrl_fd, "530 Not logged in.");
-        return 0;
+        return 1;
     }
     if (config->data_fd < 0) {
         write_socket(config->ctrl_fd, "425 Can't open data connection.");
-        return 0;
+        return 1;
     }
-    if (argument) {
-        buffer = append_path(config->working_dir, argument);
-    } else
-        buffer = strdup(config->working_dir);
+    return 0;
+}
 
+int list(session_t *config, char *argument)
+{
+    if (error_check(config))
+        return 0;
+    char *buffer = argument ? append_path(config->working_dir, argument) :
+        strdup(config->working_dir);
     DIR *dir = opendir(buffer);
     if (dir) {
-        write_socket(config->ctrl_fd,
-            "150 File status okay; about to open data connection.");
+        write_socket(config->ctrl_fd, "150 File status okay");
         for (struct dirent *f = readdir(dir); f; f = readdir(dir), write(
             config->data_fd, " ", 1)) {
             write(config->data_fd, f->d_name, strlen(f->d_name));
@@ -42,7 +44,6 @@ int list(session_t *config, char *argument)
     } else
         write_socket(config->ctrl_fd, "550 Requested action not taken.");
     closedir(dir);
-
     free(buffer);
     write_socket(config->ctrl_fd, "226 Closing data connection.");
     return 0;

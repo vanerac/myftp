@@ -42,8 +42,7 @@ int stor(session_t *config, char *argument)
         return 0;
     }
     free(buffer);
-    write_socket(config->ctrl_fd,
-        "150 File status okay; about to open data connection.");
+    write_socket(config->ctrl_fd, "150 File status okay");
     transfer(config->data_fd, fd);
     config->data_fd = -1;
 

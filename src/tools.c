@@ -73,7 +73,7 @@ command_t parse_command(char *command_raw)
         if (command_raw[i] != ' ')
             continue;
         command_name = strndup(command_raw, i);
-        argument = strdup(&command_raw[i + 1]); // todo might overflow
+        argument = strdup(&command_raw[i + 1]);
     }
     for (int i = 0; i < INVALID; ++i) {
         if (strncmp(command_name, command_list[i].command_name,

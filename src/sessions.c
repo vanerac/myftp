@@ -13,7 +13,6 @@
 
 session_t *sessions[FD_SETSIZE];
 
-
 void initSessions(void)
 {
     memset(sessions, 0, sizeof(session_t *) * FD_SETSIZE);
