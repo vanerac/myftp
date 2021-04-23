@@ -22,11 +22,9 @@ int cdup(session_t *config, char *argument)
         write_socket(config->ctrl_fd, "550 Requested action not taken.");
         return 0;
     }
-    if (buffer[strlen(buffer) - 1] == '/' && strlen(buffer) > 1) {
+    if (buffer[strlen(buffer) - 1] == '/' && strlen(buffer) > 1)
         buffer[strlen(buffer) - 1] = '\0';
-    }
     char *ptr = rindex(buffer, '/');
-
     char *new_path = strndup(buffer,
         (ptr - config->working_dir) > 0 ? ptr - config->working_dir : 1);
     free(config->working_dir);

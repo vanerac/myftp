@@ -29,7 +29,7 @@ int dele(session_t *config, char *argument)
 
     if (remove(buffer))
         write_socket(config->ctrl_fd,
-            "550 Requested action not taken. File unavailable (e.g., file not found, no access).");
+            "550 Requested action not taken");
     else
         write_socket(config->ctrl_fd,
             "250 Requested file action okay, completed.");

@@ -41,7 +41,7 @@ int retr(session_t *config, char *argument)
     if (fd < 0) {
         perror("open");
         write_socket(config->ctrl_fd,
-            "550 Requested action not taken. File unavailable (e.g., file not found, no access).");
+            "550 Requested action not taken.");
         return 0;
     }
     struct stat s;

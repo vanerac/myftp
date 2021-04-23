@@ -79,8 +79,7 @@ command_t parse_command(char *command_raw)
         if (strncmp(command_name, command_list[i].command_name,
             strlen(command_list[i].command_name)) != 0)
             continue;
-        ret = command_list[i];
-        ret.argument = trim_str(argument);
+        ret = command_list[i], ret.argument = trim_str(argument);
         break;
     }
     if (command_name != command_raw)
