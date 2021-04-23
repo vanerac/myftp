@@ -22,6 +22,26 @@ const command_t command_list[] = {{USER, "USER", &user, NULL},
     {SYST, "SYST", &syst, NULL}, {NOOP, "NOOP", &noop, NULL},
     {INVALID, "", &invalid, NULL}};
 
+char *append_path(char *path1, char *path2)
+{
+    char *buffer = calloc(strlen(path1) + strlen(path2) + 2, 1);
+    strcat(buffer, path1);
+    if (buffer[strlen(buffer) - 1] != '/')
+        strcat(&buffer[strlen(buffer) - 1], "/");
+    strcat(&buffer[strlen(buffer)], path2);
+    return buffer;
+}
+
+void transfer(int fd_from, int fd_to)
+{
+    size_t rd;
+    char *buffer = malloc(100);
+    while ((rd = read(fd_from, buffer, 100)))
+        write(fd_to, buffer, rd);
+    close(fd_from);
+    close(fd_to);
+}
+
 char *trim_str(char *str)
 {
     if (!str)

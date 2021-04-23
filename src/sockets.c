@@ -14,11 +14,6 @@
 
 #define BUFFER_SIZE 256
 
-int transfer(int fd_from, int fd_to)
-{
-    dup2(fd_to, fd_from);
-    return 0;
-}
 
 char *read_socket(int fd)
 {
