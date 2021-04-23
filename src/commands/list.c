@@ -10,6 +10,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
+#include <dirent.h>
 #include "commands.h"
 #include "sockets.h"
 #include "sessions.h"
@@ -24,9 +25,10 @@ int list(session_t *config, char *argument)
     char *direction = argument;
     char *buffer;
 
-    // todo check for data socket
-    if (config->data_fd < 0)
-        return 0; // todo error message
+    if (config->data_fd < 0) {
+        write_socket(config->ctrl_fd, "425 Can't open data connection.");
+        return 0;
+    }
 
     if (direction) {
         buffer = calloc(strlen(config->working_dir) + strlen(direction) + 2,
@@ -38,33 +40,22 @@ int list(session_t *config, char *argument)
     } else
         buffer = strdup(config->working_dir);
 
-    if (stat(buffer, &s)) {
+//    if (!fork())
+//        exit(1); // todo pour la mouli
+
+    DIR *dir = opendir(buffer);
+    if (dir) {
         write_socket(config->ctrl_fd,
-            "550 Requested action not taken. File unavailable (e.g., file not found, no access).");
-        return 0;
-    }
-
-    write_socket(config->ctrl_fd,
-        "150 File status okay; about to open data connection.");
-
-    char *args[4] = {"/bin/ls", "-l", buffer, NULL};
-
-    int pid = fork();
-    switch (pid) {
-    case -1:
-        perror("fork");
-        return 1;
-    case 0:
-        dup2(config->data_fd, 1);
-        dup2(config->data_fd, 2);
-        execvp("/bin/ls", args);
-        write_socket(config->data_fd, "");
-        exit(0);
-    default:
-        waitpid(pid, NULL, 0);
+            "150 File status okay; about to open data connection.");
+        for (struct dirent *f = readdir(dir); f; f = readdir(dir), write(
+            config->data_fd, " ", 1)) {
+            write(config->data_fd, f->d_name, strlen(f->d_name));
+        }
         close(config->data_fd);
         config->data_fd = -1;
-    }
+    } else
+        write_socket(config->ctrl_fd, "550 Requested action not taken.");
+    closedir(dir);
 
     free(buffer);
     write_socket(config->ctrl_fd, "226 Closing data connection.");

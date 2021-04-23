@@ -51,6 +51,7 @@ void createSession(int fd, struct sockaddr_in *in, char *path)
     session->ctrl_fd = fd;
     session->data_fd = -1;
     session->username = NULL;
+    session->password = NULL;
     session->client_addr = in;
     session->logged = false;
     session->working_dir = strdup(path);
