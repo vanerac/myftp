@@ -14,7 +14,6 @@
 
 #define BUFFER_SIZE 256
 
-
 char *read_socket(int fd)
 {
     char *buffer = calloc(sizeof(char), BUFFER_SIZE);

@@ -13,13 +13,8 @@
 
 session_t *sessions[FD_SETSIZE];
 
-session_t ***getSessions()
-{
-    static session_t *s_sessions[FD_SETSIZE];
-    return (session_t ***) &s_sessions; // todo implement this
-}
 
-void initSessions()
+void initSessions(void)
 {
     memset(sessions, 0, sizeof(session_t *) * FD_SETSIZE);
 }

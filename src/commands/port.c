@@ -46,7 +46,7 @@ int port(session_t *config, char *argument)
 
     if (connect(fd, (const struct sockaddr *) &serverAddr,
         sizeof(serverAddr))) {
-        // not connected
+        write_socket(config->ctrl_fd, "425 Can't open data connection.");
     }
 
     config->data_fd = fd;

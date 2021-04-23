@@ -22,17 +22,13 @@ typedef struct session_s {
     struct sockaddr_in *client_addr;
 } session_t;
 
-void initSessions();
+void initSessions(void);
 
 session_t *find_session(int fd);
 
 void createSession(int fd, struct sockaddr_in *in, char *path);
 
 void deleteSession(int fd);
-
-session_t ***getSessions();
-
-#define SESSIONS(void) *(getSessions())
 
 
 extern session_t *sessions[FD_SETSIZE];

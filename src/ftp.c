@@ -20,11 +20,7 @@ int handle_commands(int trigger_fd)
 {
     session_t *session = find_session(trigger_fd);
     char *raw_command = read_socket(session->ctrl_fd);
-    // todo recover rd size
-    // todo buffer management
-    // todo store buffer if incomplete
     command_t command = parse_command(raw_command);
-    // todo save after \r\n
     printf("command name: %s & argument : %s\n", command.command_name,
         command.argument);
     int status = (*command.command_functions)(session, command.argument);
@@ -72,7 +68,6 @@ int listen_updates(int server_socket, fd_set *rfds, char *path)
 
 int ftp(unsigned short port, char *path)
 {
-
     int fd;
 
     if ((fd = open_port(port)) < 0)
