@@ -26,8 +26,8 @@ char *append_path(char *path1, char *path2)
 {
     char *buffer = calloc(strlen(path1) + strlen(path2) + 2, 1);
     strcat(buffer, path1);
-    if (buffer[strlen(buffer) - 1] != '/')
-        strcat(&buffer[strlen(buffer) - 1], "/");
+    if (buffer[strlen(buffer)- 1] != '/')
+        strcat(&buffer[strlen(buffer)- 1], "/");
     strcat(&buffer[strlen(buffer)], path2);
     return buffer;
 }

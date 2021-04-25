@@ -20,8 +20,7 @@ static int error_check(session_t *config, char *argument)
         return 1;
     }
     if (!argument) {
-        write_socket(config->ctrl_fd,
-            "550 Requested action not taken.");
+        write_socket(config->ctrl_fd, "550 Requested action not taken.");
         return 1;
     }
     return 0;
@@ -37,7 +36,7 @@ int cwd(session_t *config, char *argument)
     else
         buffer = append_path(config->working_dir, argument);
     if (buffer[strlen(buffer) - 1] != '/')
-        buffer[strlen(buffer) - 1] = '/';
+        strcat(&buffer[strlen(buffer) - 1], "/");
     DIR *dir = opendir(buffer);
     if (dir) {
         write_socket(config->ctrl_fd, "250 Requested file action okay.");
@@ -46,6 +45,5 @@ int cwd(session_t *config, char *argument)
     } else
         write_socket(config->ctrl_fd, "550 Requested action not taken.");
     closedir(dir);
-    free(buffer);
     return 0;
 }
