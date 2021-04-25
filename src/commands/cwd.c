@@ -19,9 +19,9 @@ static int error_check(session_t *config, char *argument)
         write_socket(config->ctrl_fd, "530 Not logged in.");
         return 1;
     }
-    if (argument) {
+    if (!argument) {
         write_socket(config->ctrl_fd,
-            "501 Syntax error in parameters or arguments.");
+            "550 Requested action not taken.");
         return 1;
     }
     return 0;

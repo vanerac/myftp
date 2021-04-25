@@ -18,7 +18,7 @@ int cdup(session_t *config, char *argument)
     }
     (void) argument;
     char *buffer = config->working_dir;
-    if (!rindex(buffer, '/') || rindex(buffer, '/') == index(buffer, '/')) {
+    if (!rindex(buffer, '/')) {
         write_socket(config->ctrl_fd, "550 Requested action not taken.");
         return 0;
     }
