@@ -1,0 +1,2 @@
+# myftp
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/df9ffe63db1d4e3997867a8d2566357a)](https://app.codacy.com/gh/vanerac/myftp?utm_source=github.com&utm_medium=referral&utm_content=vanerac/myftp&utm_campaign=Badge_Grade_Settings)
